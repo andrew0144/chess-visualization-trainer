@@ -1,0 +1,120 @@
+    <div class="min-h-screen bg-gradient-to-br from-slate-900 to-slate-700 flex items-center justify-center p-4">
+      <div class="bg-white rounded-xl shadow-2xl p-8 max-w-2xl w-full">
+        <div class="text-center mb-8">
+          <h1 class="text-3xl font-bold text-gray-800 mb-2">Chess Square Training</h1>
+          <p class="text-gray-600">Click the highlighted square as fast as possible!</p>
+        </div>
+
+        <!-- Game Stats -->
+        <div class="flex justify-between items-center mb-6 bg-gray-50 rounded-lg p-4">
+          <div class="text-center">
+            <div class="text-2xl font-bold text-blue-600">{{ gameStats.score }}</div>
+            <div class="text-sm text-gray-600">Score</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-green-600">{{ gameStats.highScore }}</div>
+            <div class="text-sm text-gray-600">High Score</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-red-600">{{ gameStats.mistakes }}/3</div>
+            <div class="text-sm text-gray-600">Mistakes</div>
+          </div>
+          <div class="text-center" *ngIf="gameStats.score > 0 && gameStats.totalTime > 0">
+            <div class="text-2xl font-bold text-purple-600">
+              {{ getAverageTime() }}s
+            </div>
+            <div class="text-sm text-gray-600">Avg Time</div>
+          </div>
+        </div>
+
+        <!-- Current Target -->
+        <div class="text-center mb-6" *ngIf="gameActive">
+          <div class="text-lg text-gray-600 mb-2">Find square:</div>
+          <div class="text-4xl font-bold text-blue-600 animate-bounce">
+            {{ currentSquare.toUpperCase() }}
+          </div>
+        </div>
+
+        <!-- Chessboard -->
+        <div class="flex justify-center mb-6">
+          <div class="grid grid-cols-8 border-4 border-amber-900 rounded-lg overflow-hidden shadow-lg">
+            <div
+              *ngFor="let square of chessSquares"
+              class="w-12 h-12 flex items-center justify-center cursor-pointer text-xs font-medium transition-all duration-200 hover:opacity-80"
+              [class.bg-amber-100]="square.isLight"
+              [class.bg-amber-800]="!square.isLight"
+              [class.hover:scale-105]="gameActive"
+              [class.cursor-not-allowed]="!gameActive"
+              [class.opacity-60]="!gameActive"
+              (click)="handleSquareClick(square.coordinate)"
+            >
+              <span 
+                *ngIf="showSquareCoordinates"
+                [class.text-amber-900]="square.isLight"
+                class="select-none"
+                [class.text-amber-800]="square.isLight"
+                [class.text-amber-100]="!square.isLight"
+              >
+                {{ square.coordinate }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game Controls -->
+        <div class="text-center space-y-4">
+          <button
+            *ngIf="!gameActive && !gameOver"
+            (click)="startGame()"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg"
+          >
+            Start Training
+          </button>
+
+          <div *ngIf="gameOver" class="space-y-4">
+            <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+              <h2 class="text-xl font-bold text-red-800 mb-2">Game Over!</h2>
+              <p class="text-red-600">
+                Final Score: <span class="font-bold">{{ gameStats.score }}</span>
+                <span *ngIf="gameStats.score > 0 && gameStats.totalTime > 0">
+                  | Average Time: <span class="font-bold">{{ getAverageTime() }}s</span>
+                </span>
+              </p>
+              <p *ngIf="gameStats.score === gameStats.highScore && gameStats.score > 0" 
+                 class="text-green-600 font-bold mt-2">
+                🎉 New High Score!
+              </p>
+            </div>
+            <div class="space-x-4">
+              <button
+                (click)="startGame()"
+                class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200"
+              >
+                Play Again
+              </button>
+              <button
+                (click)="resetGame()"
+                class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200"
+              >
+                Main Menu
+              </button>
+            </div>
+          </div>
+
+          <button
+            *ngIf="gameActive"
+            (click)="resetGame()"
+            class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg transition-colors duration-200"
+          >
+            End Game
+          </button>
+        </div>
+
+        <!-- Instructions -->
+        <div class="mt-8 text-center text-sm text-gray-500 bg-gray-50 rounded-lg p-4">
+          <p class="mb-2"><strong>How to play:</strong></p>
+          <p>Click on the square that matches the coordinate shown above the board.</p>
+          <p>You have 3 mistakes before the game ends. Try to be as fast and accurate as possible!</p>
+        </div>
+      </div>
+    </div>

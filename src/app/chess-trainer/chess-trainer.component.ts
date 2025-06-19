@@ -37,6 +37,18 @@ export class ChessTrainerComponent {
   private generateSquare(): string {
     const file = FILES[Math.floor(Math.random() * 8)];
     const rank = RANKS[Math.floor(Math.random() * 8)];
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(`${file}${rank}`);
+      // Optional: Customize voice, language, pitch, rate
+      // utterance.lang = 'en-US'; 
+      // utterance.pitch = 1.2;
+      // utterance.rate = 0.9;
+
+      speechSynthesis.speak(utterance);
+    } else {
+      console.warn('Text-to-speech not supported in this browser.');
+      alert('Your browser does not support text-to-speech.');
+    }
     return file + rank;
   }
 

@@ -36,30 +36,12 @@
         </div>
 
         <!-- Chessboard -->
-        <div class="flex justify-center mb-6">
-          <div class="grid grid-cols-8 border-4 border-amber-900 rounded-lg overflow-hidden shadow-lg">
-            <div
-              *ngFor="let square of chessSquares"
-              class="w-12 h-12 flex items-center justify-center cursor-pointer text-xs font-medium transition-all duration-200 hover:opacity-80"
-              [class.bg-amber-100]="square.isLight"
-              [class.bg-amber-800]="!square.isLight"
-              [class.hover:scale-105]="gameActive"
-              [class.cursor-not-allowed]="!gameActive"
-              [class.opacity-60]="!gameActive"
-              (click)="handleSquareClick(square.coordinate)"
-            >
-              <span 
-                *ngIf="showSquareCoordinates"
-                [class.text-amber-900]="square.isLight"
-                class="select-none"
-                [class.text-amber-800]="square.isLight"
-                [class.text-amber-100]="!square.isLight"
-              >
-                {{ square.coordinate }}
-              </span>
-            </div>
-          </div>
-        </div>
+        <app-chessboard
+          [currentSquare]="currentSquare"
+          [gameActive]="gameActive"
+          [showSquareCoordinates]="showSquareCoordinates"
+          (squareClicked)="handleSquareClick($event)"
+        ></app-chessboard>
 
         <!-- Game Controls -->
         <div class="text-center space-y-4">
